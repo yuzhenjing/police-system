@@ -57,6 +57,7 @@
     <script th:inline="javascript">
         var editFlag = [[${@permission.hasPermi('system:evidence:edit')}]];
         var removeFlag = [[${@permission.hasPermi('system:evidence:remove')}]];
+        var datas = [[${@dict.getType('sys_evi_status')}]];
         var prefix = ctx + "system/evidence";
 
         $(function() {
@@ -64,6 +65,7 @@
                 url: prefix + "/list",
                 createUrl: prefix + "/add",
                 updateUrl: prefix + "/edit/{id}",
+                applyAuditUrl: prefix + "/applyAudit/{id}",
                 removeUrl: prefix + "/remove",
 				exportUrl: prefix + "/export",
                 modalName: "物证",
@@ -97,6 +99,14 @@
 					sortable: true
 				},
 				{
+					field : 'eviStatus',
+					title : '物证状态',
+					sortable: true,
+                    formatter: function(value, item, index) {
+                        return $.table.selectDictLabel(datas, item.eviStatus);
+                    }
+				},
+				{
 					field : 'createTime', 
 					title : '事件时间',
 					sortable: true
@@ -116,7 +126,7 @@
 		            align: 'center',
 		            formatter: function(value, row, index) {
 		            	var actions = [];
-		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.eviNum + '\')"><i class="fa fa-edit"></i>生成委托书</a> ');
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.applyAudit(\'' + row.eviNum + '\')"><i class="fa fa-edit"></i>生成委托书</a> ');
 		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.eviNum + '\')"><i class="fa fa-edit"></i>编辑</a> ');
                         actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.eviNum + '\')"><i class="fa fa-remove"></i>删除</a>');
 						return actions.join('');

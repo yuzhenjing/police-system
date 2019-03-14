@@ -1,8 +1,9 @@
 package com.police.project.system.evidence.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.police.framework.web.domain.BaseEntity;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import lombok.Data;
+
 
 import java.util.Date;
 
@@ -12,6 +13,7 @@ import java.util.Date;
  * @author police
  * @date 2019-03-13
  */
+@Data
 public class Evidence extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -38,10 +40,12 @@ public class Evidence extends BaseEntity {
     /**
      * 事件时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
     /**
      * 修改时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
     /**
      * 物证描述
@@ -54,101 +58,7 @@ public class Evidence extends BaseEntity {
     /**
      * 记录员
      */
-    private Integer sysUserId;
+    private Long sysUserId;
 
-    public void setEviNum(String eviNum) {
-        this.eviNum = eviNum;
-    }
-
-    public String getEviNum() {
-        return eviNum;
-    }
-
-    public void setEviName(String eviName) {
-        this.eviName = eviName;
-    }
-
-    public String getEviName() {
-        return eviName;
-    }
-
-    public void setEviUser(String eviUser) {
-        this.eviUser = eviUser;
-    }
-
-    public String getEviUser() {
-        return eviUser;
-    }
-
-    public void setCaseName(String caseName) {
-        this.caseName = caseName;
-    }
-
-    public String getCaseName() {
-        return caseName;
-    }
-
-    public void setEviCount(Integer eviCount) {
-        this.eviCount = eviCount;
-    }
-
-    public Integer getEviCount() {
-        return eviCount;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setModifyTime(Date modifyTime) {
-        this.modifyTime = modifyTime;
-    }
-
-    public Date getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setEviDesc(String eviDesc) {
-        this.eviDesc = eviDesc;
-    }
-
-    public String getEviDesc() {
-        return eviDesc;
-    }
-
-    public void setEviStatus(Integer eviStatus) {
-        this.eviStatus = eviStatus;
-    }
-
-    public Integer getEviStatus() {
-        return eviStatus;
-    }
-
-    public Integer getSysUserId() {
-        return sysUserId;
-    }
-
-    public void setSysUserId(Integer sysUserId) {
-        this.sysUserId = sysUserId;
-    }
-
-    @Override
-    public String toString() {
-        return "Evidence{" +
-                "eviNum='" + eviNum + '\'' +
-                ", eviName='" + eviName + '\'' +
-                ", eviUser='" + eviUser + '\'' +
-                ", caseName='" + caseName + '\'' +
-                ", eviCount=" + eviCount +
-                ", createTime=" + createTime +
-                ", modifyTime=" + modifyTime +
-                ", eviDesc='" + eviDesc + '\'' +
-                ", eviStatus=" + eviStatus +
-                ", sysUserId=" + sysUserId +
-                '}';
-    }
+    private String auditMsg;
 }

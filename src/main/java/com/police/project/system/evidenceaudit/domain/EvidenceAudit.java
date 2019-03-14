@@ -1,5 +1,6 @@
 package com.police.project.system.evidenceaudit.domain;
 
+import com.police.framework.aspectj.lang.annotation.Excel;
 import com.police.framework.web.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -54,6 +55,7 @@ public class EvidenceAudit extends BaseEntity {
     /**
      * 审核状态
      */
+    @Excel(name = "系统内置", readConverterExp = "1=是,0=否")
     private Integer auditStatus;
     /**
      * 审核员

@@ -8,7 +8,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
  *
  * @author police
  */
-public class RuoYiServletInitializer extends SpringBootServletInitializer {
+public class PoliceServletInitializer extends SpringBootServletInitializer {
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(PoliceSystemApplication.class);

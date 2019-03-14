@@ -1,6 +1,7 @@
 package com.police.project.system.evidenceaudit.controller;
 
 import com.police.common.utils.poi.ExcelUtil;
+import com.police.common.utils.security.ShiroUtils;
 import com.police.framework.aspectj.lang.annotation.Log;
 import com.police.framework.aspectj.lang.enums.BusinessType;
 import com.police.framework.web.controller.BaseController;
@@ -8,6 +9,7 @@ import com.police.framework.web.domain.AjaxResult;
 import com.police.framework.web.page.TableDataInfo;
 import com.police.project.system.evidenceaudit.domain.EvidenceAudit;
 import com.police.project.system.evidenceaudit.service.IEvidenceAuditService;
+import com.police.project.system.user.domain.User;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -98,6 +100,8 @@ public class EvidenceAuditController extends BaseController {
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(EvidenceAudit evidenceAudit) {
+        User currentUser = ShiroUtils.getSysUser();
+        evidenceAudit.setAuditUser(currentUser.getUserName());
         return toAjax(evidenceAuditService.updateEvidenceAudit(evidenceAudit));
     }
 

@@ -3,176 +3,130 @@
 <meta charset="utf-8">
 <head th:include="include :: header"></head>
 <body class="gray-bg">
-    
-     <div class="container-div">
-		<div class="row">
-			<div class="col-sm-12 search-collapse">
-				<form id="formId">
-					<div class="select-list">
-						<ul>
-							<li>
-								物证编号：<input type="text" name="eviNum"/>
-							</li>
 
-							<li>
-								物证名称：<input type="text" name="eviName"/>
-							</li>
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            物证编号：<input type="text" name="eviNum"/>
+                        </li>
+                        <li>
+                            物证名称：<input type="text" name="eviName"/>
+                        </li>
+                        <li>
+                            委托时间：<input type="text" name="createTime"/>
+                        </li>
+                        <li>
+                            审核状态：<input type="text" name="auditStatus"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('system:evidenceAudit:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('system:evidenceAudit:remove')}]];
+    var datas = [[${@dict.getType('sys_evi_status')}]];
+    var prefix = ctx + "system/evidenceAudit";
 
-							<li>
-								勘查人员：<input type="text" name="eviUser"/>
-							</li>
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "物证审核",
+            showExport: true,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'auditId',
+                    title: '审核编号',
+                    visible: false
+                },
+                {
+                    field: 'eviNum',
+                    title: '物证编号',
+                    sortable: true
+                },
+                {
+                    field: 'eviName',
+                    title: '物证名称',
+                    sortable: true
+                },
+                {
+                    field: 'eviUser',
+                    title: '勘查人员',
+                    sortable: true
+                },
+                {
+                    field: 'caseName',
+                    title: '案件名称',
+                    sortable: true
+                },
+                {
+                    field: 'eviCount',
+                    title: '物证个数',
+                    sortable: true
+                },
+                {
+                    field: 'createTime',
+                    title: '委托时间',
+                    sortable: true
+                },
 
-							<li>
-								案件名称：<input type="text" name="caseName"/>
-							</li>
-
-							<li>
-								物证个数：<input type="text" name="eviCount"/>
-							</li>
-
-							<li>
-								事件时间：<input type="text" name="createTime"/>
-							</li>
-
-							<li>
-								修改时间：<input type="text" name="modifyTime"/>
-							</li>
-
-							<li>
-								物证描述：<input type="text" name="eviDesc"/>
-							</li>
-
-							<li>
-								审核状态：<input type="text" name="auditStatus"/>
-							</li>
-
-							<li>
-								审核员：<input type="text" name="auditUser"/>
-							</li>
-
-							<li>
-								审核信息：<input type="text" name="auditMsg"/>
-							</li>
-
-							<li>
-								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
-							</li>
-						</ul>
-					</div>
-				</form>
-			</div>
-			
-	        <div class="btn-group-sm" id="toolbar" role="group">
-				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:evidenceAudit:add">
-					<i class="fa fa-plus"></i> 添加
-				</a>
-				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="system:evidenceAudit:edit">
-					<i class="fa fa-edit"></i> 修改
-				</a>
-				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:evidenceAudit:remove">
-					<i class="fa fa-remove"></i> 删除
-				</a>
-				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:evidenceAudit:export">
-						<i class="fa fa-download"></i> 导出
-				 </a>
-			</div>
-			<div class="col-sm-12 select-table table-striped">
-				<table id="bootstrap-table" data-mobile-responsive="true"></table>
-			</div>
-		</div>
-	</div>
-    <div th:include="include :: footer"></div>
-    <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('system:evidenceAudit:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('system:evidenceAudit:remove')}]];
-        var prefix = ctx + "system/evidenceAudit";
-
-        $(function() {
-            var options = {
-                url: prefix + "/list",
-                createUrl: prefix + "/add",
-                updateUrl: prefix + "/edit/{id}",
-                removeUrl: prefix + "/remove",
-				exportUrl: prefix + "/export",
-                modalName: "物证审核",
-		        showExport: true,
-                columns: [{
-		            checkbox: true
-		        },
-				{
-					field : 'auditId', 
-					title : '审核编号',
-					visible: false
-				},
-				{
-					field : 'eviNum', 
-					title : '物证编号',
-					sortable: true
-				},
-				{
-					field : 'eviName', 
-					title : '物证名称',
-					sortable: true
-				},
-				{
-					field : 'eviUser', 
-					title : '勘查人员',
-					sortable: true
-				},
-				{
-					field : 'caseName', 
-					title : '案件名称',
-					sortable: true
-				},
-				{
-					field : 'eviCount', 
-					title : '物证个数',
-					sortable: true
-				},
-				{
-					field : 'createTime', 
-					title : '事件时间',
-					sortable: true
-				},
-				{
-					field : 'modifyTime', 
-					title : '修改时间',
-					sortable: true
-				},
-				{
-					field : 'eviDesc', 
-					title : '物证描述',
-					sortable: true
-				},
-				{
-					field : 'auditStatus', 
-					title : '审核状态',
-					sortable: true
-				},
-				{
-					field : 'auditUser', 
-					title : '审核员',
-					sortable: true
-				},
-				{
-					field : 'auditMsg', 
-					title : '审核信息',
-					sortable: true
-				},
-		        {
-		            title: '操作',
-		            align: 'center',
-		            formatter: function(value, row, index) {
-		            	var actions = [];
-		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.auditId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.auditId + '\')"><i class="fa fa-remove"></i>删除</a>');
-						return actions.join('');
-		            }
-		        }]
-            };
-            $.table.init(options);
-        });
-    </script>
+                {
+                    field: 'eviDesc',
+                    title: '物证描述',
+                    sortable: true
+                },
+                {
+                    field: 'auditStatus',
+                    title: '审核状态',
+                    sortable: true,
+                    formatter: function(value, item, index) {
+                        return $.table.selectDictLabel(datas, item.auditStatus);
+                    }
+                },
+                {
+                    field: 'auditUser',
+                    title: '审核员',
+                    sortable: true
+                },
+                {
+                    field: 'auditMsg',
+                    title: '审核信息',
+                    sortable: true
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.auditId + '\')"><i class="fa fa-edit"></i>审核</a> ');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+</script>
 </body>
 </html>

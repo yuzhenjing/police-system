@@ -1,6 +1,7 @@
 package com.police.project.system.evidence.controller;
 
 import com.police.common.utils.poi.ExcelUtil;
+import com.police.common.utils.security.ShiroUtils;
 import com.police.framework.aspectj.lang.annotation.Log;
 import com.police.framework.aspectj.lang.enums.BusinessType;
 import com.police.framework.web.controller.BaseController;
@@ -8,10 +9,15 @@ import com.police.framework.web.domain.AjaxResult;
 import com.police.framework.web.page.TableDataInfo;
 import com.police.project.system.evidence.domain.Evidence;
 import com.police.project.system.evidence.service.IEvidenceService;
+import com.police.project.system.evidenceaudit.domain.EvidenceAudit;
+import com.police.project.system.evidenceaudit.service.IEvidenceAuditService;
+import com.police.project.system.user.domain.User;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -30,6 +36,8 @@ public class EvidenceController extends BaseController {
 
     @Autowired
     private IEvidenceService evidenceService;
+    @Autowired
+    private IEvidenceAuditService evidenceAuditService;
 
     @RequiresPermissions("system:evidence:view")
     @GetMapping()
@@ -79,9 +87,10 @@ public class EvidenceController extends BaseController {
     @ResponseBody
     public AjaxResult addSave(Evidence evidence) {
         evidence.setEviNum("NO-" + System.currentTimeMillis());
-        evidence.setEviStatus(1);
+        evidence.setEviStatus(0);
         evidence.setModifyTime(new Date());
-
+        User currentUser = ShiroUtils.getSysUser();
+        evidence.setSysUserId(currentUser.getUserId());
         return toAjax(evidenceService.insertEvidence(evidence));
     }
 
@@ -91,6 +100,13 @@ public class EvidenceController extends BaseController {
     @GetMapping("/edit/{eviNum}")
     public String edit(@PathVariable("eviNum") String eviNum, ModelMap mmap) {
         Evidence evidence = evidenceService.selectEvidenceById(eviNum);
+        EvidenceAudit evidenceAudit = new EvidenceAudit();
+        evidenceAudit.setEviNum(eviNum);
+        final List<EvidenceAudit> audits = evidenceAuditService.selectEvidenceAuditList(evidenceAudit);
+        if (!CollectionUtils.isEmpty(audits)) {
+            final EvidenceAudit audit = audits.get(0);
+            evidence.setAuditMsg(audit.getAuditMsg());
+        }
         mmap.put("evidence", evidence);
         return prefix + "/edit";
     }
@@ -103,7 +119,43 @@ public class EvidenceController extends BaseController {
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(Evidence evidence) {
+        evidence.setEviStatus(0);
         return toAjax(evidenceService.updateEvidence(evidence));
+    }
+
+    /**
+     * 生成委托书
+     *
+     * @param eviNum
+     * @param mmap
+     * @return
+     */
+    @GetMapping("/applyAudit/{eviNum}")
+    public String applyAudit(@PathVariable("eviNum") String eviNum, ModelMap mmap) {
+        Evidence evidence = evidenceService.selectEvidenceById(eviNum);
+        mmap.put("evidence", evidence);
+        return prefix + "/apply_audit";
+    }
+
+    /**
+     * 生成凭证
+     */
+    @RequiresPermissions("system:evidence:edit")
+    @Log(title = "物证", businessType = BusinessType.UPDATE)
+    @PostMapping("/applyAudit")
+    @ResponseBody
+    public AjaxResult applyAudit(Evidence evidence) {
+        EvidenceAudit evidenceAudit = new EvidenceAudit();
+        BeanUtils.copyProperties(evidence, evidenceAudit);
+        final List<EvidenceAudit> audits = evidenceAuditService.selectEvidenceAuditList(evidenceAudit);
+        evidenceAudit.setCreateTime(new Date());
+        evidenceAudit.setModifyTime(new Date());
+        evidenceAudit.setAuditStatus(1);
+        if (CollectionUtils.isEmpty(audits)) {
+            return toAjax(evidenceAuditService.insertEvidenceAudit(evidenceAudit));
+        }
+        evidenceAudit.setAuditId(audits.get(0).getAuditId());
+        return toAjax(evidenceAuditService.updateEvidenceAudit(evidenceAudit));
     }
 
     /**

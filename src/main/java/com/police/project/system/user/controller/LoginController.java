@@ -4,6 +4,7 @@ import com.police.common.utils.ServletUtils;
 import com.police.common.utils.StringUtils;
 import com.police.framework.web.controller.BaseController;
 import com.police.framework.web.domain.AjaxResult;
+import com.police.project.system.user.domain.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -35,12 +36,11 @@ public class LoginController extends BaseController {
 
     @PostMapping("/login")
     @ResponseBody
-    public AjaxResult ajaxLogin(HttpServletRequest request,String username, String password, Boolean rememberMe) {
+    public AjaxResult ajaxLogin(String username, String password, Boolean rememberMe) {
         UsernamePasswordToken token = new UsernamePasswordToken(username, password, rememberMe);
         Subject subject = SecurityUtils.getSubject();
         try {
             subject.login(token);
-            request.getSession().setAttribute("userInfo",);
             return success();
         } catch (AuthenticationException e) {
             String msg = "用户或密码错误";

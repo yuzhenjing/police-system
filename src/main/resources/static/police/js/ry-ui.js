@@ -688,6 +688,36 @@
             	var url = $.common.isEmpty(id) ? $.table._option.createUrl : $.table._option.createUrl.replace("{id}", id);
                 return url;
             },
+			//生成委托书
+            applyAudit: function(id) {
+            	if($.common.isEmpty(id) && $.table._option.type == table_type.bootstrapTreeTable) {
+            		var row = $('#' + $.table._option.id).bootstrapTreeTable('getSelections')[0];
+                	if ($.common.isEmpty(row)) {
+            			$.modal.alertWarning("请至少选择一条记录");
+            			return;
+            		}
+                    var url = $.table._option.auditUrl.replace("{id}", row[$.table._option.uniqueId]);
+                    $.modal.open("生成委托书", url);
+            	} else {
+            	    $.modal.open("生成委托书", $.operate.auditUrl(id));
+            	}
+            },
+
+            auditUrl: function(id) {
+                var url = "/404.html";
+                if ($.common.isNotEmpty(id)) {
+                    url = $.table._option.applyAuditUrl.replace("{id}", id);
+                } else {
+                    var id = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
+                    if (id.length == 0) {
+                        $.modal.alertWarning("请至少选择一条记录");
+                        return;
+                    }
+                    url = $.table._option.applyAuditUrl.replace("{id}", id);
+                }
+                return url;
+            },
+
             // 修改信息
             edit: function(id) {
             	if($.common.isEmpty(id) && $.table._option.type == table_type.bootstrapTreeTable) {
@@ -719,6 +749,19 @@
             },
             // 修改访问地址
             editUrl: function(id) {
+            	var url = "/404.html";
+            	if ($.common.isNotEmpty(id)) {
+            	    url = $.table._option.updateUrl.replace("{id}", id);
+            	} else {
+            	    var id = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
+            	    if (id.length == 0) {
+            			$.modal.alertWarning("请至少选择一条记录");
+            			return;
+            		}
+            	    url = $.table._option.updateUrl.replace("{id}", id);
+            	}
+                return url;
+            }, applyAuditUrl: function(id) {
             	var url = "/404.html";
             	if ($.common.isNotEmpty(id)) {
             	    url = $.table._option.updateUrl.replace("{id}", id);

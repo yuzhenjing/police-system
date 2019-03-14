@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * police首创 html调用 thymeleaf 实现参数管理
+ * Police首创 html调用 thymeleaf 实现参数管理
  * 
  * @author police
  */

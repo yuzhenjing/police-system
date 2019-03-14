@@ -1,6 +1,5 @@
 package com.police.project.monitor.logininfor.controller;
 
-
 import com.police.common.utils.poi.ExcelUtil;
 import com.police.framework.aspectj.lang.annotation.Log;
 import com.police.framework.aspectj.lang.enums.BusinessType;
@@ -21,12 +20,13 @@ import java.util.List;
 
 /**
  * 系统访问记录
- *
+ * 
  * @author police
  */
 @Controller
 @RequestMapping("/monitor/logininfor")
-public class LogininforController extends BaseController {
+public class LogininforController extends BaseController
+{
     private String prefix = "monitor/logininfor";
 
     @Autowired
@@ -34,14 +34,16 @@ public class LogininforController extends BaseController {
 
     @RequiresPermissions("monitor:logininfor:view")
     @GetMapping()
-    public String logininfor() {
+    public String logininfor()
+    {
         return prefix + "/logininfor";
     }
 
     @RequiresPermissions("monitor:logininfor:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(Logininfor logininfor) {
+    public TableDataInfo list(Logininfor logininfor)
+    {
         startPage();
         List<Logininfor> list = logininforService.selectLogininforList(logininfor);
         return getDataTable(list);
@@ -51,7 +53,8 @@ public class LogininforController extends BaseController {
     @RequiresPermissions("monitor:logininfor:export")
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(Logininfor logininfor) {
+    public AjaxResult export(Logininfor logininfor)
+    {
         List<Logininfor> list = logininforService.selectLogininforList(logininfor);
         ExcelUtil<Logininfor> util = new ExcelUtil<Logininfor>(Logininfor.class);
         return util.exportExcel(list, "登陆日志");
@@ -61,15 +64,17 @@ public class LogininforController extends BaseController {
     @Log(title = "登陆日志", businessType = BusinessType.DELETE)
     @PostMapping("/remove")
     @ResponseBody
-    public AjaxResult remove(String ids) {
+    public AjaxResult remove(String ids)
+    {
         return toAjax(logininforService.deleteLogininforByIds(ids));
     }
-
+    
     @RequiresPermissions("monitor:logininfor:remove")
     @Log(title = "登陆日志", businessType = BusinessType.CLEAN)
     @PostMapping("/clean")
     @ResponseBody
-    public AjaxResult clean() {
+    public AjaxResult clean()
+    {
         logininforService.cleanLogininfor();
         return success();
     }
