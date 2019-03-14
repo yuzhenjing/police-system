@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-evidenceAudit-edit" th:object="${evidenceAudit}">
+            <input id="auditId" name="auditId" th:field="*{auditId}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">物证编号：</label>
+				<div class="col-sm-8">
+					<input id="eviNum" name="eviNum" th:field="*{eviNum}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">物证名称：</label>
+				<div class="col-sm-8">
+					<input id="eviName" name="eviName" th:field="*{eviName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">勘查人员：</label>
+				<div class="col-sm-8">
+					<input id="eviUser" name="eviUser" th:field="*{eviUser}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">案件名称：</label>
+				<div class="col-sm-8">
+					<input id="caseName" name="caseName" th:field="*{caseName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">物证个数：</label>
+				<div class="col-sm-8">
+					<input id="eviCount" name="eviCount" th:field="*{eviCount}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">事件时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" th:field="*{createTime}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">修改时间：</label>
+				<div class="col-sm-8">
+					<input id="modifyTime" name="modifyTime" th:field="*{modifyTime}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">物证描述：</label>
+				<div class="col-sm-8">
+					<input id="eviDesc" name="eviDesc" th:field="*{eviDesc}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">审核状态：</label>
+				<div class="col-sm-8">
+					<input id="auditStatus" name="auditStatus" th:field="*{auditStatus}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">审核员：</label>
+				<div class="col-sm-8">
+					<input id="auditUser" name="auditUser" th:field="*{auditUser}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">审核信息：</label>
+				<div class="col-sm-8">
+					<input id="auditMsg" name="auditMsg" th:field="*{auditMsg}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/evidenceAudit";
+		$("#form-evidenceAudit-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-evidenceAudit-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.police.project.system.evidence.mapper.EvidenceMapper">
+    
+    <resultMap type="Evidence" id="EvidenceResult">
+        <result property="eviNum"    column="evi_num"    />
+        <result property="eviName"    column="evi_name"    />
+        <result property="eviUser"    column="evi_user"    />
+        <result property="caseName"    column="case_name"    />
+        <result property="eviCount"    column="evi_count"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="modifyTime"    column="modify_time"    />
+        <result property="eviDesc"    column="evi_desc"    />
+        <result property="eviStatus"    column="evi_status"    />
+        <result property="sysUserId"    column="sys_user_id"    />
+    </resultMap>
+	
+	<sql id="selectEvidenceVo">
+        select evi_num, evi_name, evi_user, case_name, evi_count, create_time, modify_time, evi_desc, evi_status from sys_evidence
+    </sql>
+	
+    <select id="selectEvidenceList" parameterType="Evidence" resultMap="EvidenceResult">
+        <include refid="selectEvidenceVo"/>
+        <where>  
+            <if test="eviNum != null  and eviNum != '' "> and evi_num = #{eviNum}</if>
+             <if test="eviName != null  and eviName != '' "> and evi_name = #{eviName}</if>
+             <if test="eviUser != null  and eviUser != '' "> and evi_user = #{eviUser}</if>
+             <if test="caseName != null  and caseName != '' "> and case_name = #{caseName}</if>
+             <if test="eviCount != null "> and evi_count = #{eviCount}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="modifyTime != null "> and modify_time = #{modifyTime}</if>
+             <if test="eviDesc != null  and eviDesc != '' "> and evi_desc = #{eviDesc}</if>
+             <if test="eviStatus != null "> and evi_status = #{eviStatus}</if>
+         </where>
+    </select>
+    
+    <select id="selectEvidenceById" parameterType="String" resultMap="EvidenceResult">
+        <include refid="selectEvidenceVo"/>
+        where evi_num = #{eviNum}
+    </select>
+        
+    <insert id="insertEvidence" parameterType="Evidence">
+        insert into sys_evidence
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="eviNum != null  and eviNum != ''  ">evi_num,</if>
+			<if test="eviName != null  and eviName != ''  ">evi_name,</if>
+			<if test="eviUser != null  and eviUser != ''  ">evi_user,</if>
+			<if test="caseName != null  and caseName != ''  ">case_name,</if>
+			<if test="eviCount != null  ">evi_count,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="modifyTime != null  ">modify_time,</if>
+			<if test="eviDesc != null  and eviDesc != ''  ">evi_desc,</if>
+			<if test="eviStatus != null  ">evi_status,</if>
+			<if test="sysUserId != null  ">sys_user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="eviNum != null  and eviNum != ''  ">#{eviNum},</if>
+			<if test="eviName != null  and eviName != ''  ">#{eviName},</if>
+			<if test="eviUser != null  and eviUser != ''  ">#{eviUser},</if>
+			<if test="caseName != null  and caseName != ''  ">#{caseName},</if>
+			<if test="eviCount != null  ">#{eviCount},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="modifyTime != null  ">#{modifyTime},</if>
+			<if test="eviDesc != null  and eviDesc != ''  ">#{eviDesc},</if>
+			<if test="eviStatus != null  ">#{eviStatus},</if>
+			<if test="sysUserId != null  ">#{sysUserId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateEvidence" parameterType="Evidence">
+        update sys_evidence
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eviName != null  and eviName != ''  ">evi_name = #{eviName},</if>
+            <if test="eviUser != null  and eviUser != ''  ">evi_user = #{eviUser},</if>
+            <if test="caseName != null  and caseName != ''  ">case_name = #{caseName},</if>
+            <if test="eviCount != null  ">evi_count = #{eviCount},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="modifyTime != null  ">modify_time = #{modifyTime},</if>
+            <if test="eviDesc != null  and eviDesc != ''  ">evi_desc = #{eviDesc},</if>
+            <if test="eviStatus != null  ">evi_status = #{eviStatus},</if>
+            <if test="sysUserId != null  ">sys_user_id = #{sysUserId},</if>
+        </trim>
+        where evi_num = #{eviNum}
+    </update>
+
+	<delete id="deleteEvidenceById" parameterType="String">
+        delete from sys_evidence where evi_num = #{eviNum}
+    </delete>
+	
+    <delete id="deleteEvidenceByIds" parameterType="String">
+        delete from sys_evidence where evi_num in 
+        <foreach item="eviNum" collection="array" open="(" separator="," close=")">
+            #{eviNum}
+        </foreach>
+    </delete>
+    
+</mapper>
