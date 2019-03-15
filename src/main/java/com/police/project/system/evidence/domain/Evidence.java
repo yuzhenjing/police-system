@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.police.framework.web.domain.BaseEntity;
 import lombok.Data;
 
-
 import java.util.Date;
 
 /**
@@ -61,4 +60,9 @@ public class Evidence extends BaseEntity {
     private Long sysUserId;
 
     private String auditMsg;
+
+    /**
+     * 案件类别
+     */
+    private Integer caseType;
 }

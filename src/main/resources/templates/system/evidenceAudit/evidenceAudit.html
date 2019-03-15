@@ -17,7 +17,7 @@
                             物证名称：<input type="text" name="eviName"/>
                         </li>
                         <li>
-                            委托时间：<input type="text" name="createTime"/>
+                            <input type="text" name="createTime" class="time-input" placeholder="委托时间"/>
                         </li>
                         <li>
                             审核状态：<input type="text" name="auditStatus"/>
@@ -58,7 +58,7 @@
             },
                 {
                     field: 'auditId',
-                    title: '审核编号',
+                    title: '委托编号',
                     visible: false
                 },
                 {
@@ -99,7 +99,7 @@
                 },
                 {
                     field: 'auditStatus',
-                    title: '审核状态',
+                    title: '审批状态',
                     sortable: true,
                     formatter: function(value, item, index) {
                         return $.table.selectDictLabel(datas, item.auditStatus);
@@ -107,12 +107,7 @@
                 },
                 {
                     field: 'auditUser',
-                    title: '审核员',
-                    sortable: true
-                },
-                {
-                    field: 'auditMsg',
-                    title: '审核信息',
+                    title: '提审员',
                     sortable: true
                 },
                 {
@@ -120,7 +115,7 @@
                     align: 'center',
                     formatter: function (value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.auditId + '\')"><i class="fa fa-edit"></i>审核</a> ');
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.auditId + '\')"><i class="fa fa-edit"></i>提交审批</a> ');
                         return actions.join('');
                     }
                 }]

@@ -1,5 +1,6 @@
 package com.police.project.system.evidenceaudit.controller;
 
+import com.police.common.utils.DateUtils;
 import com.police.common.utils.poi.ExcelUtil;
 import com.police.common.utils.security.ShiroUtils;
 import com.police.framework.aspectj.lang.annotation.Log;
@@ -7,15 +8,21 @@ import com.police.framework.aspectj.lang.enums.BusinessType;
 import com.police.framework.web.controller.BaseController;
 import com.police.framework.web.domain.AjaxResult;
 import com.police.framework.web.page.TableDataInfo;
+import com.police.project.system.evidence.domain.Evidence;
+import com.police.project.system.evidence.service.IEvidenceService;
 import com.police.project.system.evidenceaudit.domain.EvidenceAudit;
 import com.police.project.system.evidenceaudit.service.IEvidenceAuditService;
+import com.police.project.system.evidenceauth.domain.EvidenceAuth;
+import com.police.project.system.evidenceauth.service.IEvidenceAuthService;
 import com.police.project.system.user.domain.User;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,6 +38,10 @@ public class EvidenceAuditController extends BaseController {
 
     @Autowired
     private IEvidenceAuditService evidenceAuditService;
+
+    @Autowired
+    private IEvidenceAuthService evidenceAuthService;
+
 
     @RequiresPermissions("system:evidenceAudit:view")
     @GetMapping()
@@ -92,6 +103,9 @@ public class EvidenceAuditController extends BaseController {
         return prefix + "/edit";
     }
 
+    @Autowired
+    private IEvidenceService evidenceService;
+
     /**
      * 修改保存物证审核
      */
@@ -102,6 +116,32 @@ public class EvidenceAuditController extends BaseController {
     public AjaxResult editSave(EvidenceAudit evidenceAudit) {
         User currentUser = ShiroUtils.getSysUser();
         evidenceAudit.setAuditUser(currentUser.getUserName());
+
+        EvidenceAuth evidenceAuth = new EvidenceAuth();
+        evidenceAuth.setEviNum(evidenceAudit.getEviNum());
+        final List<EvidenceAuth> evidenceAuths = evidenceAuthService.selectEvidenceAuthList(evidenceAuth);
+
+        if (CollectionUtils.isEmpty(evidenceAuths)) {
+            //添加受理信息
+            evidenceAuth.setAuthNum("AUTH-" + DateUtils.parseDateToStr(DateUtils.YYYYMMDDHHMMSS, new Date()));
+            evidenceAuth.setEviName(evidenceAudit.getEviName());
+            //2 待审批  3 审批通过   4 审批拒绝
+            //添加受理状态记录
+            evidenceAuth.setAuthStatus(2);
+            evidenceAuthService.insertEvidenceAuth(evidenceAuth);
+        } else {
+            final EvidenceAuth auth = evidenceAuths.get(0);
+            auth.setAuthStatus(2);
+            evidenceAuthService.updateEvidenceAuth(auth);
+        }
+        //更改物证单状态
+        final Evidence evidence = new Evidence();
+        evidence.setEviStatus(2);
+        evidence.setEviNum(evidenceAudit.getEviNum());
+        evidenceService.updateEvidence(evidence);
+
+        //更新物证委托状态
+        evidenceAudit.setAuditStatus(2);
         return toAjax(evidenceAuditService.updateEvidenceAudit(evidenceAudit));
     }
 

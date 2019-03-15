@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.police.project.system.evidenceauth.mapper.EvidenceAuthMapper">
+    
+    <resultMap type="EvidenceAuth" id="EvidenceAuthResult">
+        <result property="authNum"    column="auth_num"    />
+        <result property="eviNum"    column="evi_num"    />
+        <result property="authMsg"    column="auth_msg"    />
+        <result property="authUser"    column="auth_user"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="eviName"    column="evi_name"    />
+        <result property="authStatus"    column="auth_status"    />
+    </resultMap>
+	
+	<sql id="selectEvidenceAuthVo">
+        select auth_num, evi_num, auth_msg, auth_user, create_time, update_time, evi_name, auth_status from sys_evidence_auth
+    </sql>
+	
+    <select id="selectEvidenceAuthList" parameterType="EvidenceAuth" resultMap="EvidenceAuthResult">
+        <include refid="selectEvidenceAuthVo"/>
+        <where>  
+            <if test="authNum != null "> and auth_num = #{authNum}</if>
+             <if test="eviNum != null  and eviNum != '' "> and evi_num = #{eviNum}</if>
+             <if test="authMsg != null  and authMsg != '' "> and auth_msg = #{authMsg}</if>
+             <if test="authUser != null  and authUser != '' "> and auth_user = #{authUser}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="eviName != null  and eviName != '' "> and evi_name = #{eviName}</if>
+             <if test="authStatus != null "> and auth_status = #{authStatus}</if>
+         </where>
+    </select>
+    
+    <select id="selectEvidenceAuthById" parameterType="String" resultMap="EvidenceAuthResult">
+        <include refid="selectEvidenceAuthVo"/>
+        where auth_num = #{authNum}
+    </select>
+        
+    <insert id="insertEvidenceAuth" parameterType="EvidenceAuth">
+        insert into sys_evidence_auth
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="authNum != null  ">auth_num,</if>
+			<if test="eviNum != null  and eviNum != ''  ">evi_num,</if>
+			<if test="authMsg != null  and authMsg != ''  ">auth_msg,</if>
+			<if test="authUser != null  and authUser != ''  ">auth_user,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="eviName != null  and eviName != ''  ">evi_name,</if>
+			<if test="authStatus != null  ">auth_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="authNum != null  ">#{authNum},</if>
+			<if test="eviNum != null  and eviNum != ''  ">#{eviNum},</if>
+			<if test="authMsg != null  and authMsg != ''  ">#{authMsg},</if>
+			<if test="authUser != null  and authUser != ''  ">#{authUser},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			<if test="eviName != null  and eviName != ''  ">#{eviName},</if>
+			<if test="authStatus != null  ">#{authStatus},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateEvidenceAuth" parameterType="EvidenceAuth">
+        update sys_evidence_auth
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eviNum != null  and eviNum != ''  ">evi_num = #{eviNum},</if>
+            <if test="authMsg != null  and authMsg != ''  ">auth_msg = #{authMsg},</if>
+            <if test="authUser != null  and authUser != ''  ">auth_user = #{authUser},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="eviName != null  and eviName != ''  ">evi_name = #{eviName},</if>
+            <if test="authStatus != null  ">auth_status = #{authStatus},</if>
+        </trim>
+        where auth_num = #{authNum}
+    </update>
+
+	<delete id="deleteEvidenceAuthById" parameterType="String">
+        delete from sys_evidence_auth where auth_num = #{authNum}
+    </delete>
+	
+    <delete id="deleteEvidenceAuthByIds" parameterType="String">
+        delete from sys_evidence_auth where auth_num in 
+        <foreach item="authNum" collection="array" open="(" separator="," close=")">
+            #{authNum}
+        </foreach>
+    </delete>
+    
+</mapper>

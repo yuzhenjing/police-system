@@ -87,6 +87,7 @@ public class EvidenceController extends BaseController {
     @ResponseBody
     public AjaxResult addSave(Evidence evidence) {
         evidence.setEviNum("NO-" + System.currentTimeMillis());
+        //未委托 0
         evidence.setEviStatus(0);
         evidence.setModifyTime(new Date());
         User currentUser = ShiroUtils.getSysUser();
@@ -150,6 +151,11 @@ public class EvidenceController extends BaseController {
         final List<EvidenceAudit> audits = evidenceAuditService.selectEvidenceAuditList(evidenceAudit);
         evidenceAudit.setCreateTime(new Date());
         evidenceAudit.setModifyTime(new Date());
+
+        //更新为证状态 待提审
+        evidence.setEviStatus(1);
+        evidenceService.updateEvidence(evidence);
+        //生成委托书  待提审
         evidenceAudit.setAuditStatus(1);
         if (CollectionUtils.isEmpty(audits)) {
             return toAjax(evidenceAuditService.insertEvidenceAudit(evidenceAudit));

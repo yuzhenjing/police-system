@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.police.project.system.evidenceresult.mapper.EvidenceResultMapper">
+    
+    <resultMap type="EvidenceResult" id="EvidenceResultResult">
+        <result property="resultNum"    column="result_num"    />
+        <result property="eviNum"    column="evi_num"    />
+        <result property="resultMsg"    column="result_msg"    />
+        <result property="resultUser"    column="result_user"    />
+        <result property="palmPrint"    column="palm_print"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<sql id="selectEvidenceResultVo">
+        select result_num, evi_num, result_msg, result_user, palm_print, create_time, update_time from sys_evidence_result
+    </sql>
+	
+    <select id="selectEvidenceResultList" parameterType="EvidenceResult" resultMap="EvidenceResultResult">
+        <include refid="selectEvidenceResultVo"/>
+        <where>  
+            <if test="resultNum != null  and resultNum != '' "> and result_num = #{resultNum}</if>
+             <if test="eviNum != null  and eviNum != '' "> and evi_num = #{eviNum}</if>
+             <if test="resultMsg != null  and resultMsg != '' "> and result_msg = #{resultMsg}</if>
+             <if test="resultUser != null  and resultUser != '' "> and result_user = #{resultUser}</if>
+             <if test="palmPrint != null  and palmPrint != '' "> and palm_print = #{palmPrint}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+         </where>
+    </select>
+    
+    <select id="selectEvidenceResultById" parameterType="String" resultMap="EvidenceResultResult">
+        <include refid="selectEvidenceResultVo"/>
+        where result_num = #{resultNum}
+    </select>
+        
+    <insert id="insertEvidenceResult" parameterType="EvidenceResult">
+        insert into sys_evidence_result
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="resultNum != null  and resultNum != ''  ">result_num,</if>
+			<if test="eviNum != null  and eviNum != ''  ">evi_num,</if>
+			<if test="resultMsg != null  and resultMsg != ''  ">result_msg,</if>
+			<if test="resultUser != null  and resultUser != ''  ">result_user,</if>
+			<if test="palmPrint != null  and palmPrint != ''  ">palm_print,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="resultNum != null  and resultNum != ''  ">#{resultNum},</if>
+			<if test="eviNum != null  and eviNum != ''  ">#{eviNum},</if>
+			<if test="resultMsg != null  and resultMsg != ''  ">#{resultMsg},</if>
+			<if test="resultUser != null  and resultUser != ''  ">#{resultUser},</if>
+			<if test="palmPrint != null  and palmPrint != ''  ">#{palmPrint},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateEvidenceResult" parameterType="EvidenceResult">
+        update sys_evidence_result
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eviNum != null  and eviNum != ''  ">evi_num = #{eviNum},</if>
+            <if test="resultMsg != null  and resultMsg != ''  ">result_msg = #{resultMsg},</if>
+            <if test="resultUser != null  and resultUser != ''  ">result_user = #{resultUser},</if>
+            <if test="palmPrint != null  and palmPrint != ''  ">palm_print = #{palmPrint},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where result_num = #{resultNum}
+    </update>
+
+	<delete id="deleteEvidenceResultById" parameterType="String">
+        delete from sys_evidence_result where result_num = #{resultNum}
+    </delete>
+	
+    <delete id="deleteEvidenceResultByIds" parameterType="String">
+        delete from sys_evidence_result where result_num in 
+        <foreach item="resultNum" collection="array" open="(" separator="," close=")">
+            #{resultNum}
+        </foreach>
+    </delete>
+    
+</mapper>

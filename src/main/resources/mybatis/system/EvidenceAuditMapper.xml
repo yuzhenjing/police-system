@@ -91,7 +91,7 @@
             <if test="auditUser != null  and auditUser != ''  ">audit_user = #{auditUser},</if>
             <if test="auditMsg != null  and auditMsg != ''  ">audit_msg = #{auditMsg},</if>
         </trim>
-        where audit_id = #{auditId}
+        where evi_num = #{eviNum}
     </update>
 
     <delete id="deleteEvidenceAuditById" parameterType="Integer">

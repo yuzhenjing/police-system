@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-evidenceCategory-edit" th:object="${evidenceCategory}">
+            <input id="categoryNum" name="categoryNum" th:field="*{categoryNum}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">物证编号：</label>
+				<div class="col-sm-8">
+					<input id="eviNum" name="eviNum" th:field="*{eviNum}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">凶器：</label>
+				<div class="col-sm-8">
+					<textarea name="lethalWeapon"  th:field="*{lethalWeapon}" maxlength="400" class="form-control" rows="2"/>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药物：</label>
+				<div class="col-sm-8">
+					<textarea name="toxicant"  th:field="*{toxicant}" maxlength="400" class="form-control" rows="2"/>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">掌纹：</label>
+				<div class="col-sm-8">
+					<textarea name="palmPrint"  th:field="*{palmPrint}" maxlength="400" class="form-control" rows="2"/>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">信件：</label>
+				<div class="col-sm-8">
+					<textarea name="letters"  th:field="*{letters}" maxlength="400" class="form-control" rows="2"/>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">其他物证：</label>
+				<div class="col-sm-8">
+					<textarea name="otherEvi"  th:field="*{otherEvi}" maxlength="400" class="form-control" rows="2"/>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">鉴定时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" th:field="*{createTime}" class="time-input" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/evidenceCategory";
+		$("#form-evidenceCategory-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-evidenceCategory-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

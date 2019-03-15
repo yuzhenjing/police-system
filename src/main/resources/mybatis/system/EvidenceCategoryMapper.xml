@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.police.project.system.evidencecategory.mapper.EvidenceCategoryMapper">
+    
+    <resultMap type="EvidenceCategory" id="EvidenceCategoryResult">
+        <result property="categoryNum"    column="category_num"    />
+        <result property="eviNum"    column="evi_num"    />
+        <result property="lethalWeapon"    column="lethal_weapon"    />
+        <result property="toxicant"    column="toxicant"    />
+        <result property="palmPrint"    column="palm_print"    />
+        <result property="letters"    column="letters"    />
+        <result property="otherEvi"    column="other_evi"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<sql id="selectEvidenceCategoryVo">
+        select category_num, evi_num, lethal_weapon, toxicant, palm_print, letters, other_evi, create_time, update_time from sys_evidence_category
+    </sql>
+	
+    <select id="selectEvidenceCategoryList" parameterType="EvidenceCategory" resultMap="EvidenceCategoryResult">
+        <include refid="selectEvidenceCategoryVo"/>
+        <where>  
+            <if test="categoryNum != null  and categoryNum != '' "> and category_num = #{categoryNum}</if>
+             <if test="eviNum != null  and eviNum != '' "> and evi_num = #{eviNum}</if>
+             <if test="lethalWeapon != null  and lethalWeapon != '' "> and lethal_weapon = #{lethalWeapon}</if>
+             <if test="toxicant != null  and toxicant != '' "> and toxicant = #{toxicant}</if>
+             <if test="palmPrint != null  and palmPrint != '' "> and palm_print = #{palmPrint}</if>
+             <if test="letters != null  and letters != '' "> and letters = #{letters}</if>
+             <if test="otherEvi != null  and otherEvi != '' "> and other_evi = #{otherEvi}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+         </where>
+    </select>
+    
+    <select id="selectEvidenceCategoryById" parameterType="String" resultMap="EvidenceCategoryResult">
+        <include refid="selectEvidenceCategoryVo"/>
+        where category_num = #{categoryNum}
+    </select>
+        
+    <insert id="insertEvidenceCategory" parameterType="EvidenceCategory">
+        insert into sys_evidence_category
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="categoryNum != null  and categoryNum != ''  ">category_num,</if>
+			<if test="eviNum != null  and eviNum != ''  ">evi_num,</if>
+			<if test="lethalWeapon != null  and lethalWeapon != ''  ">lethal_weapon,</if>
+			<if test="toxicant != null  and toxicant != ''  ">toxicant,</if>
+			<if test="palmPrint != null  and palmPrint != ''  ">palm_print,</if>
+			<if test="letters != null  and letters != ''  ">letters,</if>
+			<if test="otherEvi != null  and otherEvi != ''  ">other_evi,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="categoryNum != null  and categoryNum != ''  ">#{categoryNum},</if>
+			<if test="eviNum != null  and eviNum != ''  ">#{eviNum},</if>
+			<if test="lethalWeapon != null  and lethalWeapon != ''  ">#{lethalWeapon},</if>
+			<if test="toxicant != null  and toxicant != ''  ">#{toxicant},</if>
+			<if test="palmPrint != null  and palmPrint != ''  ">#{palmPrint},</if>
+			<if test="letters != null  and letters != ''  ">#{letters},</if>
+			<if test="otherEvi != null  and otherEvi != ''  ">#{otherEvi},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateEvidenceCategory" parameterType="EvidenceCategory">
+        update sys_evidence_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eviNum != null  and eviNum != ''  ">evi_num = #{eviNum},</if>
+            <if test="lethalWeapon != null  and lethalWeapon != ''  ">lethal_weapon = #{lethalWeapon},</if>
+            <if test="toxicant != null  and toxicant != ''  ">toxicant = #{toxicant},</if>
+            <if test="palmPrint != null  and palmPrint != ''  ">palm_print = #{palmPrint},</if>
+            <if test="letters != null  and letters != ''  ">letters = #{letters},</if>
+            <if test="otherEvi != null  and otherEvi != ''  ">other_evi = #{otherEvi},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where category_num = #{categoryNum}
+    </update>
+
+	<delete id="deleteEvidenceCategoryById" parameterType="String">
+        delete from sys_evidence_category where category_num = #{categoryNum}
+    </delete>
+	
+    <delete id="deleteEvidenceCategoryByIds" parameterType="String">
+        delete from sys_evidence_category where category_num in 
+        <foreach item="categoryNum" collection="array" open="(" separator="," close=")">
+            #{categoryNum}
+        </foreach>
+    </delete>
+    
+</mapper>
